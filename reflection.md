@@ -43,7 +43,7 @@ Time availability, preference, completion, deadline, priority
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
 
-A tradeoff the scheduler will make is assigning priority to tasks. If an owner does not have enough time to do all tasks, then they can prioritize the higher priority tasks that are more important.
+A tradeoff the scheduler will make is assigning priority to tasks. It will schedule high priority tasks first, and if one high priority task is long, the scheduler will schedule that first over several lower priority tasks.
 
 ---
 

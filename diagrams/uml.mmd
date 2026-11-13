@@ -14,6 +14,7 @@ classDiagram
         +List~Task~ careTasks
         +addTask(task: Task) void
         +removeTask(task: Task) void
+        +markTaskComplete(task: Task, completedOn: date?) Task?
         +getTasks() List~Task~
     }
 
@@ -23,7 +24,9 @@ classDiagram
         +String priority {high|medium|low}
         +bool isCompleted
         +time? dueBy
-        +markComplete() void
+        +String recurrence {none|daily|weekly}
+        +date? dueDate
+        +markComplete(completedOn: date?) Task?
         +updatePriority(priority: String) void
     }
 
@@ -35,6 +38,9 @@ classDiagram
 
     class Scheduler {
         +List~ScheduledTask~ plan
+        +sortByTime(tasks: List~Task~) List~Task~
+        +filterTasks(owner: Owner, isCompleted: bool?, petName: String?) List~Task~
+        +detectConflicts(plan: List~ScheduledTask~) List~String~
         +buildDailyPlan(owner: Owner, scheduleDate: date) List~ScheduledTask~
         -selectTasks(tasks: List~Task~, owner: Owner, scheduleDate: date) List~ScheduledTask~
         -canSchedule(task: Task, owner: Owner, startsAt: datetime, elapsedMinutes: int) bool
@@ -46,5 +52,5 @@ classDiagram
     ScheduledTask --> Task : scheduled instance of
     Scheduler ..> Owner : uses preferred start and sole daily budget
     Scheduler ..> Pet : reads care tasks
-    Scheduler ..> Task : ranks priority; enforces duration and deadline
+    Scheduler ..> Task : ranks priority; enforces duration, deadline, and due date
     Scheduler ..> ScheduledTask : assigns start and end times

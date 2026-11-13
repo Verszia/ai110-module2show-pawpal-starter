@@ -1,6 +1,6 @@
-from datetime import date, time
+from datetime import date, datetime, time, timedelta
 
-from pawpal_system import Owner, Pet, Scheduler, Task
+from pawpal_system import Owner, Pet, ScheduledTask, Scheduler, Task
 
 
 def main() -> None:
@@ -39,6 +39,23 @@ def main() -> None:
             f"({item.task.duration_minutes} min, "
             f"priority: {item.task.priority})"
         )
+
+    conflict_start = datetime.combine(today, time(8, 0))
+    conflict_demo = [
+        ScheduledTask(
+            dog.get_tasks()[0],
+            conflict_start,
+            conflict_start + timedelta(minutes=30),
+        ),
+        ScheduledTask(
+            cat.get_tasks()[0],
+            conflict_start,
+            conflict_start + timedelta(minutes=10),
+        ),
+    ]
+    print("\nConflict detection demo (different pets):")
+    for warning in scheduler.detect_conflicts(conflict_demo):
+        print(f"WARNING: {warning}")
 
 
 if __name__ == "__main__":

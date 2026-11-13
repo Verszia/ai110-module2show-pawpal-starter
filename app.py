@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import date, time
 
 import streamlit as st
 from pawpal_system import Owner, Pet, Task
@@ -26,7 +26,7 @@ with st.expander("What you need to build", expanded=True):
     st.markdown(
         """
 At minimum, your system should:
-- Represent pet care tasks (what needs to happen, how long it takes, priority)
+- Represent pet care tasks (what needs to happen, how long it takes, priority, and recurrence)
 - Represent the pet and the owner (basic info and preferences)
 - Build a plan/schedule for a day that chooses and orders tasks based on constraints
 - Explain the plan (why each task was chosen and when it happens)
@@ -83,7 +83,7 @@ pet = owner.pets[pet_index]
 st.markdown("### Tasks")
 st.caption(f"Tasks are stored as Task objects on {pet.name}.")
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 with col1:
     task_title = st.text_input(
         "Task title", value="Morning walk", key="task_title"
@@ -100,6 +100,16 @@ with col3:
     priority = st.selectbox(
         "Priority", ["low", "medium", "high"], index=2, key="task_priority"
     )
+with col4:
+    recurrence = st.selectbox(
+        "Recurrence", ["none", "daily", "weekly"], key="task_recurrence"
+    )
+
+due_date = None
+if recurrence != "none":
+    due_date = st.date_input(
+        "First due date", value=date.today(), key="task_due_date"
+    )
 
 if st.button("Add task"):
     if task_title.strip():
@@ -108,6 +118,8 @@ if st.button("Add task"):
                 title=task_title.strip(),
                 duration_minutes=int(duration),
                 priority=priority,
+                recurrence=recurrence,
+                due_date=due_date,
             )
         )
     else:
@@ -123,10 +135,25 @@ if tasks:
                 "duration_minutes": task.duration_minutes,
                 "priority": task.priority,
                 "is_completed": task.is_completed,
+                "recurrence": task.recurrence,
+                "due_date": task.due_date,
             }
             for task in tasks
         ]
     )
+    for task_index, task in enumerate(tasks):
+        if not task.is_completed and st.button(
+            f"Mark complete: {task.title}",
+            key=f"complete_task_{pet_index}_{task_index}",
+        ):
+            next_task = pet.mark_task_complete(task)
+            if next_task is not None:
+                st.success(
+                    f"Completed. The next occurrence is due "
+                    f"{next_task.due_date:%B %d, %Y}."
+                )
+            else:
+                st.success("Task marked complete.")
 else:
     st.info("No tasks yet. Add one above.")
 
