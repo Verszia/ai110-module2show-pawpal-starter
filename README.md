@@ -65,7 +65,9 @@ pytest --cov
 Sample test output:
 
 ```
-# Paste your pytest output here
+tests\test_pawpal.py ................                                                                                                                                [100%]
+
+=========================================================================== 16 passed in 0.03s ============================================================================
 ```
 
 ## 📐 Smarter Scheduling

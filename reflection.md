@@ -77,6 +77,7 @@ I asked AI for constraints to put on the scheduler. It gave a few constraints th
 - How confident are you that your scheduler works correctly?
 - What edge cases would you test next if you had more time?
 
+I am very confident that my scheduler works correctly. If I had more time, I'd try to test if a task that would run past midnight is skipped.
 ---
 
 ## 5. Reflection
