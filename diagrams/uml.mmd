@@ -5,6 +5,7 @@ classDiagram
         +int availableMinutesPerDay
         +addPet(pet: Pet) void
         +removePet(pet: Pet) void
+        +getAllTasks() List~Task~
     }
 
     class Pet {
@@ -19,23 +20,31 @@ classDiagram
     class Task {
         +String title
         +int durationMinutes
-        +String priority
+        +String priority {high|medium|low}
         +bool isCompleted
+        +time? dueBy
         +markComplete() void
         +updatePriority(priority: String) void
     }
 
+    class ScheduledTask {
+        +Task task
+        +datetime startsAt
+        +datetime endsAt
+    }
+
     class Scheduler {
-        +time startTime
-        +int availableMinutes
-        +List~Task~ plan
-        +buildDailyPlan(owner: Owner, pet: Pet) List~Task~
-        +selectTasks(tasks: List~Task~, availableMinutes: int) List~Task~
-        +explainPlan(plan: List~Task~) String
+        +List~ScheduledTask~ plan
+        +buildDailyPlan(owner: Owner, scheduleDate: date) List~ScheduledTask~
+        -selectTasks(tasks: List~Task~, owner: Owner, scheduleDate: date) List~ScheduledTask~
+        -canSchedule(task: Task, owner: Owner, startsAt: datetime, elapsedMinutes: int) bool
+        +explainPlan(plan: List~ScheduledTask~) String
     }
 
     Owner "1" --> "0..*" Pet : owns
     Pet "1" *-- "0..*" Task : care tasks
-    Scheduler ..> Owner : reads availability
+    ScheduledTask --> Task : scheduled instance of
+    Scheduler ..> Owner : uses preferred start and sole daily budget
     Scheduler ..> Pet : reads care tasks
-    Scheduler ..> Task : selects and orders
+    Scheduler ..> Task : ranks priority; enforces duration and deadline
+    Scheduler ..> ScheduledTask : assigns start and end times
