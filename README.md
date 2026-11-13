@@ -85,10 +85,12 @@ tests\test_pawpal.py ................                                           
 
 Describe your app in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. On the left panel, add the owner name and fill out the preferred start time and available minutes per day that the owner can do tasks.
+2. Create your pets: Add a pet name and species, then click add pet. Do this for every pet the owner has.
+3. In the manage pet dropdown, select your pet to create a task for that pet specifically. When the correct pet is selected, fill out the care task fields including Task title, duration, priority, recurrence, and if it has deadlines. When satisfied, click "Add Task" to add it to the list.
+4. You can add more tasks as needed for that pet. To add tasks to other pets, click the manage pet dropdown and select the other pet. Repeat step 3 as many times as needed.
+5. Click the "Daily Schedule" tab to view the schedule that has been generated.
+6. When a task is completed, navigate back to the "Tasks" tab and click "Complete: [Task Name]" to take it off the daily schedule.
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+**Screenshot or video**
+![alt text](image.png)

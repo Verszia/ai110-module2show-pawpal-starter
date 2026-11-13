@@ -72,6 +72,8 @@ I asked AI for constraints to put on the scheduler. It gave a few constraints th
 - What behaviors did you test?
 - Why were these tests important?
 
+There are a total of 16 tests done, but the most important behaviors tested were making sure the sorting and filter functions worked, making sure recurrences worked, and making sure the daily schedule is properly built. These tests are important because they are core parts of the functionality of the app in the case of the schedule and recurrences, and efficient for the user in the case of the sorting and filter functions.
+
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
@@ -86,10 +88,16 @@ I am very confident that my scheduler works correctly. If I had more time, I'd t
 
 - What part of this project are you most satisfied with?
 
+I am most satisfied with the way the schedule gets generated.
+
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
 
+I would try to add functionality to add multiple owners.
+
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+I've learned how to connect a logic layer to a UI layer, being able to separate different functions.

@@ -1,0 +1,79 @@
+classDiagram
+    class Priority {
+        <<enumeration>>
+        high
+        medium
+        low
+    }
+
+    class Recurrence {
+        <<enumeration>>
+        none
+        daily
+        weekly
+    }
+
+    class Owner {
+        +name: str
+        +preferred_start_time: time
+        +available_minutes_per_day: int
+        +pets: List~Pet~ = []
+        +__post_init__() None
+        +add_pet(pet: Pet) None
+        +remove_pet(pet: Pet) None
+        +get_all_tasks() List~Task~
+    }
+
+    class Pet {
+        +name: str
+        +species: str
+        +care_tasks: List~Task~ = []
+        +__post_init__() None
+        +add_task(task: Task) None
+        +remove_task(task: Task) None
+        +mark_task_complete(task: Task, completed_on: Optional~date~) Optional~Task~
+        +get_tasks() List~Task~
+    }
+
+    class Task {
+        +title: str
+        +duration_minutes: int
+        +priority: Priority
+        +is_completed: bool = false
+        +due_by: Optional~time~ = None
+        +recurrence: Recurrence = none
+        +due_date: Optional~date~ = None
+        +__post_init__() None
+        +mark_complete(completed_on: Optional~date~) Optional~Task~
+        +update_priority(priority: Priority) None
+    }
+
+    class ScheduledTask {
+        <<frozen>>
+        +task: Task
+        +starts_at: datetime
+        +ends_at: datetime
+    }
+
+    class Scheduler {
+        +plan: List~ScheduledTask~ = []
+        +sort_by_time(tasks: List~Task~) List~Task~
+        +filter_tasks(owner: Owner, is_completed: Optional~bool~, pet_name: Optional~str~) List~Task~
+        +detect_conflicts(plan: List~ScheduledTask~) List~str~
+        +build_daily_plan(owner: Owner, schedule_date: date) List~ScheduledTask~
+        -_select_tasks(tasks: List~Task~, owner: Owner, schedule_date: date) List~ScheduledTask~
+        -_can_schedule(task: Task, owner: Owner, starts_at: datetime, elapsed_minutes: int) bool
+        +explain_plan(plan: List~ScheduledTask~) str
+    }
+
+    Owner "1" --> "0..*" Pet : pets
+    Pet "0..*" --> "0..*" Task : care_tasks
+    Scheduler "1" *-- "0..*" ScheduledTask : plan
+    ScheduledTask --> Task : task occurrence
+    Scheduler ..> Owner : reads preferences and tasks
+    Scheduler ..> Task : filters, ranks, and checks feasibility
+
+    note for Task "priority and recurrence are Literal type aliases. Completing a recurring task marks this occurrence complete and returns the next occurrence."
+    note for Scheduler "sort_by_time orders by due_by with undated tasks last. build_daily_plan ranks due tasks, then enforces the daily time budget, same-day fit, and due_by deadline."
+    note for Pet "mark_task_complete stores the next occurrence returned by Task.mark_complete. remove_task raises ValueError when the task is not a member."
+    note for Scheduler "detect_conflicts reports overlapping intervals; adjacent intervals are not conflicts."
